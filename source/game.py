@@ -1,6 +1,7 @@
 from source.player import Player
 from source.board import Board
 from source.tile import Tile
+import pygame
 
 import random
 
@@ -90,3 +91,26 @@ class Game:
         # After the turn, switch to the next player
         self.next_turn()
 
+#Pygame settings 
+
+pygame.init()
+
+WIDTH = 800
+HEIGHT = 600
+FPS = 60
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Rummikub Game")
+timer = pygame.time.Clock()
+font = pygame.font.Font(None, 36)
+
+
+
+run = True
+while run:
+    timer.tick(FPS)
+    screen.fill('grey')
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+    
+    pygame.display.flip()
