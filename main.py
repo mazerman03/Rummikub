@@ -2,7 +2,7 @@ from source.game import Game
 
 def main():
     #TODO: Runs with default names, player number and names be custom.
-    game = Game(player_names=["Noe", "Max"])
+    game = Game(player_names=["Noe", "Max", "Will"])
     while not game.game_over():
         game.play_turn()
 
