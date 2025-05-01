@@ -172,3 +172,45 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# Ignore LaTeX intermediate files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdy
+
+# Ignore temporary or backup files
+*.bak
+*.tmp
+*~
+*.swp
+*.swo
+
+# Ignore latexmk preview files
+*.pdfsync
+
+# Ignore TeXShop/TeXworks files
+*.texpadtmp
+.texpadtmp/
+
+# Ignore output except final PDF
+!*.pdf
+
+# macOS system files
+.DS_Store
