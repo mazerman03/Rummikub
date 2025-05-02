@@ -6,7 +6,7 @@
 \usepackage{hyperref}
 \geometry{margin=2.5cm}
 
-\title{Anteproyecto de Investigación de Operaciones}
+\title{Anteproyecto de Investigación de Operaciones\\\large{Programación Entera con Rummikub}}
 \author{2WOMEN}
 \date{17 Abril 2025}
 
@@ -16,46 +16,132 @@
 
 \section*{1. Definición del Problema a Resolver}
 
-% Describir el problema 
+\subsection*{Definición del problema}
+El presente problema consiste en desarrollar un modelo matemático que, a partir de las fichas disponibles en la mano de un jugador y las fichas colocadas en la mesa en el juego de Rummikub, determine la mejor jugada posible. El objetivo principal es maximizar la puntuación obtenida al colocar fichas en la mesa o, alternativamente, minimizar el valor total de las fichas que permanecen en la mano.
 
-\subsection*{Definicion del problema}
+\subsection*{Objetivo del modelo}
+\begin{itemize}
+    \item Maximizar el valor total de las fichas colocadas en la mesa.
+    \item Minimizar el valor total de las fichas que permanecen en la mano.
+\end{itemize}
 
-\subsection*{Objetivo del Modelo}
-
-\subsection*{Relevancia del Problema}
-
+\subsection*{Relevancia del problema}
+El juego de Rummikub presenta una estructura combinatoria compleja que lo convierte en un caso interesante para aplicar técnicas de optimización discreta. Modelar este juego permite explorar problemas reales de asignación, agrupamiento y maximización bajo restricciones estrictas, aportando una forma lúdica de aplicar herramientas de investigación de operaciones.
 
 \section*{2. Clasificación del Tipo de Modelo}
-
-% Indicar si es programación lineal, entera, no lineal, etc.
-
-\subsection*{Justificación de la Técnica Elegida}
-
-
-\section*{3. Identificación de Elementos del Modelo}
-
-% Indicar elemntos
+El tipo de modelo que se utilizará es programación entera lineal, ya que:
 
 \begin{itemize}
-    \item Parámetros conocidos (datos de entrada):
-    \item Variables de decisión:
-    \item Función(es) objetivo(s):
-    \item Restricciones del sistema:
+    \item Las variables de decisión son discretas (enteras, usualmente binarias).
+    \item La función objetivo es lineal (minimizar la suma del valor de las fichas no jugadas).
+    \item Las restricciones también son lineales (por ejemplo, una ficha sólo puede usarse una vez; las combinaciones deben seguir reglas del juego).
 \end{itemize}
 
 
+\subsection*{Justificación de la técnica elegida}
+Las decisiones discretas del juego (como colocar o no una ficha) y las restricciones estrictas en la formación de combinaciones válidas permiten representar el problema como un modelo entero lineal. Esta técnica ofrece una solución óptima dentro de un espacio finito y controlado, haciendo viable su aplicación.
+
+\section*{3. Identificación de Elementos del Modelo}
+
+\textbf{Parámetros conocidos:}
+\begin{itemize}
+    \item Fichas en mano del jugador.
+    \item Fichas colocadas en la mesa.
+    \item Reglas del juego: tipos de combinaciones válidas, colores, valores, etc.
+    \item \textit{[Agregar más parámetros si se identifican más adelante.]}
+\end{itemize}
+
+\textbf{Variables de decisión:}
+\begin{itemize}
+    \item Variables binarias para indicar si una ficha es colocada.
+    \item Variables para representar qué combinación se forma.
+    \item \textit{[Agregar otras variables si se requieren en el modelo final.]}
+\end{itemize}
+
+\textbf{Función objetivo:}
+\begin{itemize}
+    \item Maximizar la puntuación (valor de las fichas colocadas).
+    \item \textit{[Posible función alternativa: minimizar fichas restantes en mano.]}
+\end{itemize}
+
+\textbf{Restricciones:}
+\begin{itemize}
+    \item Solo se permiten combinaciones válidas según las reglas del juego.
+    \item Las fichas solo se pueden usar una vez por turno.
+    \item Considerar restricciones adicionales como el mínimo de 30 puntos en primera jugada.
+    \item \textit{[Agregar restricciones de secuencia, color, uso de comodines, etc.]}.
+\end{itemize}
+
 \section*{4. Diseño Inicial de Implementación}
 
-% Diseño
+\textbf{Lenguaje y herramientas:}
+\begin{itemize}
+    \item Python.
+    \item Bibliotecas: PuLP, Gurobi, scipy.optimize.
+    \item PyGame para visualización de la simulación.
+    \item \textit{[Evaluar uso de otras herramientas si fuera necesario.]}
+\end{itemize}
 
+\textbf{Estructura del código:}
+\begin{itemize}
+    \item \textbf{Entrada:} fichas del jugador y estado actual de la mesa.
+    \item \textbf{Validación:} módulo que genere todas las jugadas posibles válidas.
+    \item \textbf{Modelo MILP:} definición de variables, restricciones y función objetivo.
+    \item \textbf{Salida:} mostrar jugada óptima y visualización en la interfaz.
+    \item \textit{[Agregar pseudocódigo o ejemplos si se tienen en versiones futuras.]}
+\end{itemize}
 
 \section*{5. Planificación del Proyecto}
 
-% Organizacion del proyecto
+\subsection*{Cronograma}
+\begin{itemize}
+    \item \textbf{Semana 1 (11–17 abril):} Redacción del problema, objetivos y tipo de modelo.
+    \item \textbf{Semana 2 (18–24 abril):} Codificación inicial del modelo y validación de parámetros.
+    \item \textbf{Semana 3 (25–30 abril):} Pruebas del modelo con casos básicos y simulación preliminar.
+    \item \textbf{Semana 4 (1–9 mayo):} Desarrollo completo del modelo, integración y ajustes.
+    \item \textbf{Semana 5 (10–16 mayo):} Resultados finales, conclusiones, documentación y demo.
+\end{itemize}
 
+\subsection*{Responsables del equipo}
+\begin{itemize}
+    \item Aaron, Noe, Max – Modelo Matemático
+    \item Eli, William, Ambar, Gloria, Max – Simulación del juego
+    \item Max – Redacción del documento
+    \item \textit{[Agregar otras tareas específicas si es necesario.]}
+\end{itemize}
+
+\subsection*{Entregables}
+\begin{itemize}
+    \item Documento de formulación del problema.
+    \item Diseño inicial del modelo y la implementación.
+    \item Cronograma detallado y tabla de responsabilidades.
+    \item Script funcional (versión preliminar y final).
+    \item Video resumen semanal.
+    \item \textit{[Incluir enlace a carpeta compartida, si aplica.]}
+\end{itemize}
 
 \section*{6. Compromiso de Integridad Académica}
-% Carta
 
+Nos comprometemos a realizar este proyecto de forma íntegra, respetando los principios de honestidad académica, sin recurrir al plagio y utilizando correctamente las fuentes consultadas. Todo el desarrollo es producto del trabajo colaborativo del equipo, con atribución clara a las herramientas y bibliografía empleada.
+
+\vspace{1cm}
+\noindent Firma de las integrantes:  
+\vspace{0.5cm}
+
+\noindent \rule{7cm}{0.4pt} \\
+Nombre de integrante 1
+
+\vspace{0.5cm}
+\noindent \rule{7cm}{0.4pt} \\
+Nombre de integrante 2
+
+\vspace{0.5cm}
+\noindent \rule{7cm}{0.4pt} \\
+Nombre de integrante 3
+
+\vspace{0.5cm}
+\noindent \rule{7cm}{0.4pt} \\
+Nombre de integrante 4
 
 \end{document}
+
