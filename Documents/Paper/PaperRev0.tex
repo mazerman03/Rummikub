@@ -274,25 +274,34 @@ The model defines the following sets, parameters, and variables:
     \item $t_i$: number of times tile $i$ is currently on the table.
     \item $r_i$: number of times tile $i$ is available in the player’s rack.
     \item $v_i$: value of tile $i$ (equal to its number; joker can have custom value).
+    \item $w_j$: number of times set $j$ is currently on the table (for change minimization).
+    \item $M$: large constant used to scale the influence of secondary objectives (e.g., 40).
 \end{itemize}
 
 \paragraph{Variables:}
 \begin{itemize}
     \item $x_j \in \{0, 1, 2\}$: number of times set $j$ is formed in the new solution.
     \item $y_i \in \{0, 1, 2\}$: number of times tile $i$ is played from the player’s rack.
+    \item $z_j \in \{0, 1, 2\}$: number of times set $j$ appears both in the original table and in the new solution.
 \end{itemize}
 
 \subsection{Objective Function}
 
-The primary objective is to maximize the number of tiles placed from the rack:
+\paragraph{Option 1: Maximize number of tiles placed}
 \[
 \max \sum_{i \in I} y_i
 \]
 
-Alternatively, the model can maximize the total value of those tiles:
+\paragraph{Option 2: Maximize total value of tiles placed}
 \[
 \max \sum_{i \in I} v_i \cdot y_i
 \]
+
+\paragraph{Option 3: Maximize value and minimize changes (extended model)}
+\[
+\max \left( \sum_{i \in I} v_i \cdot y_i + \frac{1}{M} \sum_{j \in J} z_j \right)
+\]
+The second term rewards preserving existing sets from the original configuration, weighted to be less important than the main objective.
 
 \subsection{Constraints}
 
@@ -300,10 +309,10 @@ Alternatively, the model can maximize the total value of those tiles:
 \[
 \sum_{j \in J} s_{ij} x_j = t_i + y_i \quad \forall i \in I
 \]
-This ensures that each tile used in the final solution either:
+Each tile used in the final solution must either:
 \begin{itemize}
-    \item Was already present on the table, or
-    \item Was placed from the player’s rack.
+    \item Already exist on the table, or
+    \item Be added from the player’s rack.
 \end{itemize}
 
 \paragraph{Rack Availability Constraint:}
@@ -312,15 +321,35 @@ y_i \leq r_i \quad \forall i \in I
 \]
 A tile cannot be played more times than it is available in the player’s rack.
 
+\paragraph{Set Preservation Constraints:}
+\[
+z_j \leq x_j \quad \forall j \in J
+\]
+\[
+z_j \leq w_j \quad \forall j \in J
+\]
+These ensure that $z_j = \min(x_j, w_j)$ — a set is only considered preserved if it appears both in the original and new table states.
+
+\paragraph{Joker Usage Constraint:}
+\[
+\sum_{j \in J} s_{\text{joker}, j} \cdot x_j \leq r_{\text{joker}}
+\]
+This limits the number of jokers used in selected sets to the number available on the player’s rack.
+
 \paragraph{Variable Domains:}
 \[
-x_j \in \{0, 1, 2\}, \quad y_i \in \{0, 1, 2\}
+x_j \in \{0, 1, 2\}, \quad y_i \in \{0, 1, 2\}, \quad z_j \in \{0, 1, 2\}
 \]
-Each set or tile can appear at most twice, because there are at most two of each tile in the game.
 
-\subsection{Feasibility}
-
-The model is always feasible, since setting $y_i = 0$ for all $i$ results in the current state of the board being preserved. This baseline corresponds to making no move at all, yielding an objective value of zero.
+\subsection{Full Constraint Summary}
+\begin{align*}
+\sum_{j \in J} s_{ij} x_j &= t_i + y_i &&\forall i \in I \\
+y_i &\leq r_i &&\forall i \in I \\
+z_j &\leq x_j &&\forall j \in J \\
+z_j &\leq w_j &&\forall j \in J \\
+\sum_{j \in J} s_{\text{joker}, j} \cdot x_j &\leq r_{\text{joker}} &&\text{(joker limit)} \\
+x_j, y_i, z_j &\in \{0, 1, 2\} &&\forall j \in J, i \in I
+\end{align*}
 
 
 \section{Implementation and Experiments}
