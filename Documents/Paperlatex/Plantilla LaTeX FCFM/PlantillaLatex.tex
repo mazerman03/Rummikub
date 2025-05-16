@@ -1,0 +1,141 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage{fcfm}
+
+\begin{document}
+
+%------ Encabezado -------- %
+\cabecera{Rummikub}{Group: 2WOMEN}{An Integer Programming Approach to Solving Rummikub Configurations"} {May 16,2025}
+
+\rule{17cm}{0.1mm}
+
+\authorrowthree
+  {\customauthor{Max Zermeno Manrique}{max.zermenom@uanl.edu.mx}{School of Physics and Mathematics \\ UANL}{San NIcolas de los Garza,Nuevo Leon, MX}}
+  {\customauthor{Noe de Jesus Salazar Lara}{jesus.salazarlr@uanl.edu.mx}{School of Physics and Mathematics \\ UANL}{San NIcolas de los Garza,Nuevo Leon, MX}}
+  {\customauthor{Gloria E.Ostos Soto}{gloria.ostossr@uanl.edu.mx}{School of Physics and Mathematics \\ UANL}{San NIcolas de los Garza,Nuevo Leon, MX}}
+
+\authorrowthree
+  {\customauthor{Aaron Mireles Baron}{aaron.mirelesb@uanl.edu.mx}{School of Physics and Mathematics \\ UANL}{San NIcolas de los Garza,Nuevo Leon, MX}}
+  {\customauthor{Ambar A.Reyes Rodriguez}{ambar.reyesrz@uanl.edu.mx}{School of Physics and Mathematics \\ UANL}{San NIcolas de los Garza,Nuevo Leon, MX}}
+  {\customauthor{Fernando Elizondo Villareal}{fernando.elizondovlr@uanl.edu.mx}{School of Physics and Mathematics \\ UANL}{San NIcolas de los Garza,Nuevo Leon, MX}}
+  {\customauthor{Williams O.Baca Tovar}{williams.bacat@uanl.edu.mx}{School of Physics and Mathematics \\ UANL}{San NIcolas de los Garza,Nuevo Leon, MX}}
+
+\authorrowone
+  {\customauthor{Luis A. Gutierrez-Rodriguez}{lgutierrezr@uanl.edu.mx}{Universidad Autónoma de Nuevo León}{San Nicolás de los Garza, Nuevo León, MX}}
+
+\rule{17cm}{0.1mm}
+
+\begin{abstract}
+Rummikub is a popular tile-based game that involves both combinatorial optimization 
+and strategic decision-making. This paper presents a formal investigation into the game 
+mechanics, identifies the core computational challenges, and introduces an integer 
+programming (IP) model designed to find optimal moves for a given player state. 
+We analyze the problem space, define constraints based on legal game rules, and 
+propose an IP formulation to maximize score per turn. Giving a future insight into 
+applying possible Counting strategies to optimize decision making when given 
+multiple players' states.
+\end{abstract}
+
+\smallskip
+\noindent\textbf{Palabras clave:} Rummikub, Integer Programming, Game Theory, Combinatorial Optimization
+
+\section*{Introduction}
+Rummikub is a widely played tile-based game that combines elements of rummy and mahjong. 
+Players aim to be the first to empty their racks by forming sets and runs using numbered 
+and colored tiles. While the rules are simple, the combinatorial complexity that emerges 
+as the game progresses makes decision-making increasingly difficult. A player may have 
+many possible ways to arrange their tiles on the board, particularly when they are allowed 
+to manipulate existing sets. Deciding on the best possible move—i.e., the one that maximizes 
+the number or value of tiles placed on the table—is a non-trivial problem.
+
+In this research, we investigate the use of Integer Linear Programming (ILP) to solve the 
+Rummikub move optimization problem. Our goal is to develop a mathematical model that, given 
+a current board state and a player's hand, determines the optimal set of tile moves that 
+obey all Rummikub rules while maximizing a strategic objective, such as the number or 
+value of tiles placed. This approach is based on the successful work of Den Hertog and 
+Hulshof (2006), who showed that Rummikub configurations can be effectively modeled and 
+solved using ILP within seconds, even in nontrivial game states.
+
+\subsection*{Why use Integer Linear Programming?}
+Integer Linear Programming is a branch of mathematical optimization used for solving decision
+problems involving discrete variables and linear relationships. In ILP, the goal is to 
+maximize or minimize a linear objective function (like total tile value placed), subject 
+to a set of linear equality or inequality constraints (like the legal formation of sets).
+
+In Rummikub, each decision—whether to play a tile, form a group or a run, or manipulate the 
+board—can be encoded as a binary or integer variable (e.g., "1" if the tile is used, "0" if 
+not). The constraints ensure that moves are legal according to the game rules (e.g., sets 
+must contain valid combinations of numbers and colors, no tile can be used more than once, 
+jokers are used properly, etc.).
+
+Using ILP offers several advantages:
+\begin{itemize}
+    \item Optimality: It guarantees the best move given the current information.
+    \item Flexibility: Complex rules (like joker usage and minimizing board changes) can be incorporated as constraints or secondary objectives.
+    \item Speed: With modern solvers, even complex configurations can be solved in under a second.
+\end{itemize}
+
+\section*{Background and Related Work}
+\subsection*{Rummikub Game Rules Overview}
+Rummikub is a tile-based game for 2 to 4 players (or up to 6 with extended sets). The goal is to be the first to eliminate all tiles from one's rack by forming valid sets according to specific rules. Below, we summarize the essential components and gameplay mechanics relevant to our mathematical modeling.
+
+\subsection*{Objective}
+The aim of the game is to place all the tiles from one's rack onto the table by forming valid sets: \textbf{groups} or \textbf{runs}.
+
+\subsection*{Tile Set}
+The complete game includes:
+\begin{itemize}
+    \item 106 tiles: two sets of tiles numbered 1 to 13 in four colors (red, blue, black, and orange), plus 2 jokers.
+    \item Each player starts with 14 tiles on a personal rack.
+    \item Remaining tiles form a face-down pool.
+\end{itemize}
+
+\subsection*{Valid Sets}
+\begin{itemize}
+    \item \textbf{Group:} Three or four tiles of the same number in different colors.
+    \item \textbf{Run:} Three or more consecutive numbers in the same color.
+\end{itemize}
+
+\section*{Problem Definition and Set Enumeration}
+\subsection*{Since the Problem We Are Solving}
+The core decision-making challenge in a game of Rummikub is determining the best possible move during a player's turn. Specifically, the question is:
+
+\begin{quote}
+    \emph{What is the largest number (or total value) of tiles that a player can legally place on the table in a single turn, either by forming new sets or by manipulating existing sets, in accordance with all Rummikub rules?}
+\end{quote}
+
+This is a nontrivial problem due to the combinatorial explosion of possible tile groupings and manipulations. A single rack of 14 tiles, combined with the dynamic state of the board, can result in thousands of possible legal moves. Attempting to evaluate all possible combinations by hand or brute-force computation is computationally infeasible. Thus, the use of \textbf{Integer Linear Programming (ILP)} offers a structured way to model these constraints and systematically identify optimal solutions.
+
+\section*{Model Details}
+\subsection*{Overview}
+To determine the optimal move in a given Rummikub configuration, Den Hertog and Hulshof proposed an Integer Linear Programming (ILP) model. The model computes the best possible placement of tiles from a player's rack onto the table, optionally involving manipulation of existing sets. The optimization goal is to either:
+\begin{itemize}
+    \item Maximize the \textbf{number of tiles} placed, or
+    \item Maximize the \textbf{value of tiles} placed (i.e., sum of tile numbers).
+\end{itemize}
+
+\subsection*{Model Structure}
+The model defines the following sets, parameters, and variables:
+
+\paragraph{Indices:}
+\begin{itemize}
+    \item $i \in I = \{1, \dots, 53\}$: index for tile types (including the joker).
+    \item $j \in J = \{1, \dots, 1174\}$: index for all possible valid sets (runs and groups, with or without jokers).
+\end{itemize}
+
+\paragraph{Parameters:}
+\begin{itemize}
+    \item $s_{ij}$: equals 1 if tile $i$ is part of set $j$; 0 otherwise.
+    \item $t_i$: number of times tile $i$ is currently on the table.
+    \item $r_i$: number of times tile $i$ is available in the player's rack.
+    \item $v_i$: value of tile $i$ (equal to its number; joker can have custom value).
+    \item $w_j$: number of times set $j$ is currently on the table (for change minimization).
+    \item $M$: large constant used to scale the influence of secondary objectives (e.g., 40).
+\end{itemize}
+
+\section*{Conclusion}
+We have proposed an integer programming model capable of identifying optimal Rummikub moves from a static game state. This framework serves as a step toward developing intelligent agents capable of playing competitively.
+
+\bibliographystyle{apalike-ejor}
+\bibliography{referencias}
+
+\end{document}
