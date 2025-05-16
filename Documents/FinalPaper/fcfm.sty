@@ -1,0 +1,108 @@
+\usepackage[utf8]{inputenc} % Input encoding in UTF-8
+\usepackage[english]{babel} % Translates automatic elements (like dates, titles) to English
+
+\usepackage{epsfig,graphicx} % For inserting and managing images
+\usepackage[left=2cm,right=2cm,top=1.8cm,bottom=2.3cm]{geometry} % Document margins
+\usepackage{array} % Improved table control
+\usepackage{tabularx} % Automatically adjustable width tables
+\usepackage{multicol} % Allows multiple columns
+\usepackage{ifthen} % Conditional structures (\ifthenelse)
+
+\usepackage{hyperref}  % Clickable links (URLs, references, DOIs)
+\usepackage{doi}       % Proper formatting and linking of DOIs
+
+\usepackage{amsmath} % Enhanced math environments
+\usepackage{amssymb} % Additional math symbols
+\usepackage{amsthm}  % Theorems, proofs, etc.
+
+\usepackage{fancyhdr} % Custom headers and footers
+\usepackage{lastpage} % Reference to the last page (for pagination)
+
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{\textit{Page \thepage\ of \pageref{LastPage}}}
+
+\usepackage{lipsum} % Generates placeholder text (Lorem Ipsum)
+
+% Customize DOI text in the bibliography
+\renewcommand{\doitext}{DOI:~}
+
+% Custom author block:
+% #1 = Full name
+% #2 = Email
+% #3 = Institution (if empty, omitted)
+% #4 = City, State, Country
+\newcommand{\customauthor}[4]{%
+  \begin{minipage}[t]{\linewidth}
+    \centering
+    \textbf{#1} \\
+    #2 \\
+    \ifthenelse{\equal{#3}{}}{}{%
+      \texttt{#3} \\
+    }
+    #4
+  \end{minipage}
+}
+
+% One author centered row
+\newcommand{\authorrowone}[1]{%
+\begin{center}
+\begin{tabularx}{0.5\textwidth}{>{\centering\arraybackslash}X}
+#1
+\end{tabularx}
+\end{center}
+}
+
+% Two authors
+\newcommand{\authorrowtwo}[2]{%
+\begin{center}
+\begin{tabularx}{0.75\textwidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+#1 & #2
+\end{tabularx}
+\end{center}
+}
+
+% Three authors
+\newcommand{\authorrowthree}[3]{%
+\begin{center}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+#1 & #2 & #3
+\end{tabularx}
+\end{center}
+}
+
+% Institutional header with logos and centered text
+% #1 = Course name
+% #2 = Group or section
+% #3 = Title
+% #4 = Date or extra info
+\newcommand{\customheader}[4]{%
+\noindent\makebox[\textwidth][c]{%
+	\begin{minipage}{3cm}
+		\vspace{-6mm}
+        \centering
+        \includegraphics[height=3.4cm]{UANL.pdf} % Left logo
+        \vspace{1mm}
+    \end{minipage}
+    \hspace{0.5cm}
+    \begin{minipage}{9cm}
+    	\vspace{-6mm}
+        \centering
+        \textbf{\large Universidad Autónoma de Nuevo León}\\[0.1cm]
+        \textbf{Faculty of Physical and Mathematical Sciences}\\[0.1cm]
+        \textbf{#1 $\vert$ #2}\\[0.1cm]
+        #3\\[0.1cm]
+        #4\\[0.1cm]
+        \vspace{1mm}
+    \end{minipage}
+    \hspace{0.5cm}
+    \begin{minipage}{3cm}
+	    \vspace{-6mm}
+        \centering
+        \includegraphics[height=3.4cm]{FCFM.pdf} % Right logo
+        \vspace{1mm}
+    \end{minipage}
+}%
+}
+
+

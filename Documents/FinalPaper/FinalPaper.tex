@@ -1,25 +1,28 @@
-\documentclass[12pt]{article}
-\usepackage[a4paper,margin=1in]{geometry}
-\usepackage{amsmath, amssymb}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{hyperref}
-\usepackage{algorithm}
-\usepackage{algorithmic}
-\usepackage{caption}
-\usepackage{natbib}
-
-\title{An Integer Programming Approach to Solving Rummikub Configurations}
-\author{M. Zermeño \\ School of Physics and Mathematics \\ UANL}
-\date{\today}
+\documentclass[11pt,letterpaper]{article}
+\usepackage{fcfm}
 
 \begin{document}
 
-\sloppy
-\maketitle
+%------ Header -------- %
+\customheader{Operations Research}{Group: 032}{The Use of \textit{"Lorem Ipsum"} in \LaTeX{} Templates}{October 14, 1582}
+
+\rule{17cm}{0.1mm}
+
+\authorrowthree
+  {\customauthor{Albert Einstein}{aeinstein@princeton.edu}{Institute for Advanced Study}{Princeton, New Jersey, USA}}
+  {\customauthor{Marie Curie}{mcurie@sorbonne.fr}{Université de Paris}{Paris, Île-de-France, France}}
+  {\customauthor{Isaac Newton}{inewton@cam.ac.uk}{University of Cambridge}{Cambridge, England, UK}}
+
+\authorrowtwo
+  {\customauthor{Galileo Galilei}{ggalilei@unipi.it}{Università di Pisa}{Pisa, Tuscany, Italy}}
+  {\customauthor{Charles Darwin}{cdarwin@cam.ac.uk}{University of Cambridge}{Downe, Kent, England, UK}}
+
+\authorrowone
+  {\customauthor{Luis A. Gutierrez-Rodriguez}{lgutierrezr@uanl.edu.mx}{Universidad Autónoma de Nuevo León}{San Nicolás de los Garza, Nuevo León, MX}}
+
+\rule{17cm}{0.1mm}
 
 \begin{abstract}
-\sloppy
 Rummikub is a popular tile-based game that involves both combinatorial optimization 
 and strategic decision-making. This paper presents a formal investigation into the game 
 mechanics, identifies the core computational challenges, and introduces an integer 
@@ -30,7 +33,10 @@ applying possible Counting strategies to optimize decision making when given
 multiple players' states.
 \end{abstract}
 
-\section{Introduction}
+\smallskip
+\noindent\textbf{Keywords:} \LaTeX{}, Lorem Ipsum, lipsum, templates, document formatting, placeholder text, typography.
+
+\section*{Introduction}
 Rummikub is a widely played tile-based game that combines elements of rummy and mahjong. 
 Players aim to be the first to empty their racks by forming sets and runs using numbered 
 and colored tiles. While the rules are simple, the combinatorial complexity that emerges 
@@ -47,7 +53,7 @@ value of tiles placed. This approach is based on the successful work of Den Hert
 Hulshof (2006), who showed that Rummikub configurations can be effectively modeled and 
 solved using ILP within seconds, even in nontrivial game states.
 
-\subsection{Why use Integer Linear Programming?}
+\subsection*{Why use Integer Linear Programming?}
 Integer Linear Programming is a branch of mathematical optimization used for solving decision
 problems involving discrete variables and linear relationships. In ILP, the goal is to 
 maximize or minimize a linear objective function (like total tile value placed), subject 
@@ -70,15 +76,16 @@ Using ILP offers several advantages:
 \end{itemize}
 This is especially valuable in Rummikub because brute-force enumeration of all legal move 
 combinations becomes computationally infeasible as the number of tiles increases. We will further
-explore the brute-force enumeration search space, when discussing the ILP model. 
-\section{Background Game Rules and Complexity}
-\subsection{Rummikub Game Rules Overview}
+explore the brute-force enumeration search space, when discussing the ILP model.
+
+\section*{Background Game Rules and Complexity}
+\subsection*{Rummikub Game Rules Overview}
 Rummikub is a tile-based game for 2 to 4 players (or up to 6 with extended sets). The goal is to be the first to eliminate all tiles from one's rack by forming valid sets according to specific rules. Below, we summarize the essential components and gameplay mechanics relevant to our mathematical modeling.
 
-\subsection{Objective}
+\subsection*{Objective}
 The aim of the game is to place all the tiles from one's rack onto the table by forming valid sets: \textbf{groups} or \textbf{runs}.
 
-\subsection{Tile Set}
+\subsection*{Tile Set}
 The complete game includes:
 \begin{itemize}
     \item 106 tiles: two sets of tiles numbered 1 to 13 in four colors (red, blue, black, and orange), plus 2 jokers.
@@ -86,20 +93,20 @@ The complete game includes:
     \item Remaining tiles form a face-down pool.
 \end{itemize}
 
-\subsection{Valid Sets}
+\subsection*{Valid Sets}
 \begin{itemize}
     \item \textbf{Group:} Three or four tiles of the same number in different colors.
     \item \textbf{Run:} Three or more consecutive numbers in the same color.
 \end{itemize}
 
-\subsection{Setup}
+\subsection*{Setup}
 \begin{itemize}
     \item Players draw one tile each; the highest goes first.
     \item All tiles are then shuffled and stacked in piles (optional for convenience).
     \item Each player draws 14 tiles for their rack.
 \end{itemize}
 
-\subsection{Initial Meld}
+\subsection*{Initial Meld}
 \begin{itemize}
     \item A player's first move must consist of one or more valid sets with a combined value of at least 30 points.
     \item Tiles used must come solely from the player’s rack.
@@ -107,7 +114,7 @@ The complete game includes:
     \item If unable or unwilling to make the initial meld, the player draws a tile from the pool and ends their turn.
 \end{itemize}
 
-\subsection{Gameplay}
+\subsection*{Gameplay}
 \begin{itemize}
     \item Turns proceed clockwise.
     \item After the initial meld, players may:
@@ -119,7 +126,7 @@ The complete game includes:
     \item Tiles drawn cannot be played until the player's next turn.
 \end{itemize}
 
-\subsection{Manipulation Rules}
+\subsection*{Manipulation Rules}
 Players may manipulate sets on the table under the following conditions:
 \begin{itemize}
     \item At the end of the turn, all tiles on the table must be in valid sets.
@@ -128,7 +135,7 @@ Players may manipulate sets on the table under the following conditions:
     \item The joker must then be immediately reused to form a new set in the same turn.
 \end{itemize}
 
-\subsection{The Joker}
+\subsection*{The Joker}
 \begin{itemize}
     \item Acts as a substitute for any tile in a valid set.
     \item Can be reclaimed if replaced by the tile it represents.
@@ -136,7 +143,7 @@ Players may manipulate sets on the table under the following conditions:
     \item Cannot be used before the player's initial meld is completed.
 \end{itemize}
 
-\subsection{Winning and Scoring}
+\subsection*{Winning and Scoring}
 \begin{itemize}
     \item A game ends when a player empties their rack.
     \item Other players total the value of the tiles remaining on their racks; this becomes their negative score.
@@ -144,7 +151,8 @@ Players may manipulate sets on the table under the following conditions:
     \item The joker carries a penalty of 30 points if left on a rack.
     \item If no player can make a move and the pool is empty, the player with the lowest rack total wins.
 \end{itemize}
-\subsection{Computational Complexity}
+
+\subsection*{Computational Complexity}
 
 The computational complexity of determining an optimal or even a valid move in \textit{Rummikub} has been studied formally. Previous research establishes that the problem of finding a valid move in a generalized version of Rummikub is \textbf{NP-complete}, particularly when the number of tile values and the number of suits are considered as part of the input~\cite{rummikub_complexity}. This complexity arises from the vast number of permutations and combinations that must be evaluated to check whether a selection of tiles can be rearranged into valid sets (runs or groups) under the game’s constraints.
 
@@ -154,9 +162,10 @@ Moreover, although the decision problem is NP-complete in the generalized settin
 
 This result is particularly relevant to the standard version of Rummikub as played in practice, where these parameters are indeed constants. Thus, while the general case is intractable, there is an important distinction: under fixed parameters (as in real-world games), finding valid moves is computationally feasible. This duality between theoretical complexity and practical playability motivates further algorithmic strategies that exploit these fixed constraints, such as dynamic programming or integer linear programming approaches.
 
-\section{Problem Definition and Set Enumeration}
 
-\subsection{Since the Problem We Are Solving}
+\section*{Problem Definition and Set Enumeration}
+
+\subsection*{Since the Problem We Are Solving}
 
 The core decision-making challenge in a game of Rummikub is determining the best possible move during a player's turn. Specifically, the question is:
 
@@ -168,7 +177,7 @@ This is a nontrivial problem due to the combinatorial explosion of possible tile
 
 To build such a model, it is essential to first define the full universe of legal \textbf{Rummikub sets} (i.e., all combinations of tiles that can be legally played), which is where the number \textbf{1174} plays a critical role.
 
-\subsection{Enumeration of All Valid Sets}
+\subsection*{Enumeration of All Valid Sets}
 
 In Rummikub, a \textbf{set} is a valid grouping of tiles that satisfies one of the following two rules:
 \begin{itemize}
@@ -250,17 +259,16 @@ Each set is assigned an index ($j \in \{1, \dots, 1174\}$) and is represented in
     \item Optionally minimize unnecessary changes to the table.
 \end{itemize}
 
-\section{Model Details}
+\section*{Model Details}
 
-\subsection{Overview}
+\subsection*{Overview}
 
-To determine the optimal move in a given Rummikub configuration, Den Hertog and Hulshof proposed an Integer Linear Programming (ILP) model. The model computes the best possible placement of tiles from a player’s rack onto the table, optionally involving manipulation of existing sets. The optimization goal is to either:
+To determine the optimal move in a given Rummikub configuration, Den Hertog and Hulshof proposed an Integer Linear Programming (ILP) model. The model computes the best possible placement of tiles from a player’s rack onto the table involving manipulation of existing sets. The optimization goal is to:
 \begin{itemize}
-    \item Maximize the \textbf{number of tiles} placed, or
-    \item Maximize the \textbf{value of tiles} placed (i.e., sum of tile numbers).
+    \item Maximize the \textbf{value of tiles} placed (i.e., sum of tile numbers) and minimize unnecessary changes to the table.
 \end{itemize}
 
-\subsection{Model Structure}
+\subsection*{Model Structure}
 
 The model defines the following sets, parameters, and variables:
 
@@ -275,9 +283,9 @@ The model defines the following sets, parameters, and variables:
     \item $s_{ij}$: equals 1 if tile $i$ is part of set $j$; 0 otherwise.
     \item $t_i$: number of times tile $i$ is currently on the table.
     \item $r_i$: number of times tile $i$ is available in the player’s rack.
-    \item $v_i$: value of tile $i$ (equal to its number; joker can have custom value).
+    \item $v_i$: value of tile $i$ (equal to its number; joker has value of 30 when in player's rack).
     \item $w_j$: number of times set $j$ is currently on the table (for change minimization).
-    \item $M$: large constant used to scale the influence of secondary objectives (e.g., 40).
+    \item $M$: large constant used to scale the influence of secondary objective (e.g., 40).
 \end{itemize}
 
 \paragraph{Variables:}
@@ -287,7 +295,7 @@ The model defines the following sets, parameters, and variables:
     \item $z_j \in \{0, 1, 2\}$: number of times set $j$ appears both in the original table and in the new solution.
 \end{itemize}
 
-\subsection{Objective Function}
+\subsection*{Objective Function}
 
 \paragraph{Option 1: Maximize number of tiles placed}
 \[
@@ -305,7 +313,7 @@ The model defines the following sets, parameters, and variables:
 \]
 The second term rewards preserving existing sets from the original configuration, weighted to be less important than the main objective.
 
-\subsection{Constraints}
+\subsection*{Constraints}
 
 \paragraph{Tile Conservation Constraint:}
 \[
@@ -343,7 +351,7 @@ This limits the number of jokers used in selected sets to the number available o
 x_j \in \{0, 1, 2\}, \quad y_i \in \{0, 1, 2\}, \quad z_j \in \{0, 1, 2\}
 \]
 
-\subsection{Full Constraint Summary}
+\subsection*{Full Constraint Summary}
 \begin{align*}
 \sum_{j \in J} s_{ij} x_j &= t_i + y_i &&\forall i \in I \\
 y_i &\leq r_i &&\forall i \in I \\
@@ -354,12 +362,13 @@ x_j, y_i, z_j &\in \{0, 1, 2\} &&\forall j \in J, i \in I
 \end{align*}
 
 
-\section{Implementation and Experiments}
-\subsection{Tools Used}
+\section*{Implementation and Experiments}
+\subsection*{Tools Used}
 Model implemented using Python and solved with Google OR-Tools\cite{or_tools}.
 
-\subsection{Test Cases}
+\subsection*{Test Cases}
 Present example game states and corresponding optimal plays derived from the model.
+
 
 \begin{figure}[h]
     \centering
@@ -367,12 +376,12 @@ Present example game states and corresponding optimal plays derived from the mod
     \caption{Example board configuration solved by the model.}
 \end{figure}
 
-\subsection{Results}
+\subsection*{Results}
 Show performance in terms of solution time, and move quality.
 
-\section{Discussion}
+\section*{Discussion}
 
-\subsection{Limitations}
+\subsection*{Limitations}
 
 While the proposed Integer Linear Programming (ILP) model offers a powerful approach for determining optimal Rummikub moves from a static board configuration, several limitations emerged during development and testing.
 
@@ -382,7 +391,7 @@ Another notable challenge is the handling of dynamic player interaction across t
 
 Moreover, while our code implementation using Google OR-Tools successfully solves the ILP formulation for various static scenarios, it lacks automation in test case generation and does not currently simulate full game progression. Each test must be manually crafted, which limits the breadth and depth of experimentation. The system also cannot yet play multiple turns in sequence or simulate a complete game involving multiple players with evolving board states.
 
-\subsection{Future Work}
+\subsection*{Future Work}
 
 There are several directions for future research and development that could enhance the capabilities and applicability of this model.
 
@@ -398,8 +407,8 @@ Additionally, automating the generation of test scenarios and enabling the simul
 
 Finally, enabling the system to track game progression, adapt to previous moves, and refine its strategy over time would be essential for constructing a competitive AI capable of playing Rummikub autonomously and at a high level.
 
-\section{Conclusion}
 
+\section*{Conclusions}
 In this work, we have presented a comprehensive mathematical framework for solving the Rummikub move optimization problem using Integer Linear Programming. By defining all 1174 valid tile sets and encoding game rules into a set of linear constraints, we developed a model capable of determining the optimal move for a given player in a static game state. Our ILP model was implemented using Google OR-Tools, and we demonstrated its ability to solve a variety of board configurations effectively, providing optimal solutions that respect all game constraints.
 
 The key strength of our approach lies in its precision and formal rigor. Unlike heuristic or greedy methods, our ILP formulation guarantees the identification of a globally optimal move under the defined objective function—either maximizing the number or total value of tiles placed. Furthermore, the modular nature of the model allows for extensions, such as alternative scoring schemes, secondary objectives (e.g., minimizing board changes), and the inclusion of joker-handling rules.
@@ -409,7 +418,9 @@ Looking ahead, this work lays the foundation for the development of a fully auto
 
 In summary, this investigation provides a strong first step toward the automation of intelligent gameplay in Rummikub through mathematical modeling. The fusion of combinatorial enumeration, integer programming, and AI techniques offers a promising pathway to mastering the intricate strategies of this deceptively complex game.
 
-\bibliographystyle{plainnat}
-\bibliography{rummikub_research}
+\bigskip
+
+\bibliographystyle{apalike-ejor}
+\bibliography{references}
 
 \end{document}
