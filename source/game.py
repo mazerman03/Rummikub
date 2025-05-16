@@ -1,7 +1,8 @@
 from source.player import Player
 from source.board import Board
 from source.tile import Tile
-import pygame
+from source.settings import WIDTH, HEIGHT, TITLE_STRING, FPS, BG_COLOR
+import pygame, sys
 
 import random
 
@@ -12,11 +13,17 @@ class Game:
         if player_names is None:
             player_names = ["Noe", "Max"]
 
-        self.players = [Player(name) for name in player_names]
-        self.current_player_index = 0
-        self.board = Board()
-        self.tile_bag = self.create_tile_bag()
-        self.deal_initial_tiles()
+        #self.players = [Player(name) for name in player_names]
+        #self.current_player_index = 0
+        #self.board = Board()
+        #self.tile_bag = self.create_tile_bag()
+        #self.deal_initial_tiles()
+
+        pygame.init()
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        pygame.display.set_caption(TITLE_STRING)
+        self.clock = pygame.time.Clock()
+        
 
     #TODO: Haven't introduced jokers into the mix, might be easier to do without them then include them at the end. 
     def create_tile_bag(self):
@@ -91,151 +98,31 @@ class Game:
         # After the turn, switch to the next player
         self.next_turn()
 
+    def run(self):
 
-game = Game(player_names=["Jugador 1", "Jugador 2"])
+        self.start_time = pygame.time.get_ticks()
 
-selected_tile = None
+        while True:
+        # Handle quit operation
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
-#Pygame settings 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  # Left mouse button
+                        mouse_down = True
 
-pygame.init()
-pygame.font.init()
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:  # Left mouse button
+                        if mouse_down:
+                            mouse_down = False
+            # Time variables
+            self.delta_time = (pygame.time.get_ticks() - self.start_time) / 1000
+            self.start_time = pygame.time.get_ticks()
+            pygame.display.update()
+            self.screen.fill(BG_COLOR)
 
-# Define the colors
-BLACK = (0, 0, 0)
-DARKGREY = (99, 99, 99)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
- 
-# Define the dimensions of the screen
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
- 
-# Define the dimensions of the tiles
-TILE_WIDTH = 50
-TILE_HEIGHT = 70
- 
-# Define the number of tiles in the pool
-POOL_SIZE = 106
- 
-# Define the number of tiles in a rack
-RACK_SIZE = 14
- 
-# Define the number of tiles in a group
-GROUP_SIZE = 3
- 
-# Define the number of colors
-NUM_COLORS = 5
- 
-# Define the number of runs
-NUM_RUNS = 2
- 
-# Define the number of tiles per run
-TILES_PER_RUN = 4
- 
-# Define the number of tiles per group
-TILES_PER_GROUP = 5
- 
-# Define the number of tiles per player
-TILES_PER_PLAYER = 13
- 
-# Define the number of players
-NUM_PLAYERS = 3
- 
-# Define the font size
-FONT_SIZE = 20
- 
-# Define the font
-FONT = pygame.font.Font(None, FONT_SIZE)
-
-# Create the screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-# Set the window title
-pygame.display.set_caption("Rummykub Game")
-
-def get_color_from_tile(tile):
-    color_map = {
-        'red': RED,
-        'blue': BLUE,
-        'yellow': (255, 255, 0),
-        'black': BLACK
-    }
-    return color_map.get(tile.color, WHITE)
-
-def draw_tiles():
-    screen.fill(DARKGREY)
-    
-    # Draw the pool (using game.tile_bag)
-    for i in range(5):
-        pygame.draw.rect(screen, WHITE, (10, 10 + i*80, TILE_WIDTH, TILE_HEIGHT))
-    
-    # Draw the hand of each player (racks)
-    for i, player in enumerate(game.players):
-        for j, tile in enumerate(player.hand):
-            color = get_color_from_tile(tile) 
-            x = 100 + j * TILE_WIDTH
-            y = 10 + i * 80
-            pygame.draw.rect(screen, color, (x, y, TILE_WIDTH, TILE_HEIGHT))
-            # Draw the tile number
-            text = FONT.render(str(tile.number), True, BLACK)
-            text_rect = text.get_rect(center=(x + TILE_WIDTH//2, y + TILE_HEIGHT//2))
-            screen.blit(text, text_rect)
-    
-    # Draw the board (sets and runs)
-    for i, group in enumerate(game.board.sets_and_runs): 
-        for j, tile in enumerate(group):
-            x = 10 + j * TILE_WIDTH
-            y = 410 + i * 80
-            pygame.draw.rect(screen, get_color_from_tile(tile), (x, y, TILE_WIDTH, TILE_HEIGHT))
-    
-    pygame.display.flip()
-
-def handle_events():
-    global selected_tile
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            return
-        
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            x, y = pygame.mouse.get_pos()
-            current_player = game.players[game.current_player_index]
-            
-            # Draw tile from the pool
-            if 10 <= x <= 10 + TILE_WIDTH and 10 <= y <= 10 + TILE_HEIGHT:
-                Game.draw_tile(current_player)
-            
-            # Click on a tile in the player's hand
-            for i, tile in enumerate(current_player.hand):
-                tile_x = 100 + i * TILE_WIDTH
-                tile_y = 10 + game.current_player_index * 80
-                if tile_x <= x <= tile_x + TILE_WIDTH and tile_y <= y <= tile_y + TILE_HEIGHT:
-                    selected_tile = tile  # Select the tile
-            
-            # Click on the board to place the selected tile
-            if selected_tile:
-                game.board.add_tile(selected_tile)  
-                current_player.hand.remove(selected_tile)
-                selected_tile = None
-    
-
-clock = pygame.time.Clock()
-running = True
-while running:
-    clock.tick(60)
-    handle_events()
-    draw_tiles()
-    
-    # Check for game over condition 
-    if game.game_over():
-        running = False
-    
-    # Change turn on space key press
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_SPACE]:
-        game.next_turn()
-
-pygame.quit()
+            #self.hand.update()
+            self.clock.tick(FPS)
+                            
