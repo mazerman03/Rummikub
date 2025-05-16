@@ -144,13 +144,15 @@ Players may manipulate sets on the table under the following conditions:
     \item The joker carries a penalty of 30 points if left on a rack.
     \item If no player can make a move and the pool is empty, the player with the lowest rack total wins.
 \end{itemize}
-
 \subsection{Computational Complexity}
-Previous research suggests that determining a valid move is NP-hard due to the permutations and combinations of tile arrangements.~\cite{rummikub_complexity}.
 
+The computational complexity of determining an optimal or even a valid move in \textit{Rummikub} has been studied formally. Previous research establishes that the problem of finding a valid move in a generalized version of Rummikub is \textbf{NP-complete}, particularly when the number of tile values and the number of suits are considered as part of the input~\cite{rummikub_complexity}. This complexity arises from the vast number of permutations and combinations that must be evaluated to check whether a selection of tiles can be rearranged into valid sets (runs or groups) under the game’s constraints.
 
-\subsection{Related AI Models}
-Discuss existing models or papers on game AI, such as those used in Sudoku, Scrabble, or other combinatorial games.
+In their work, Bodlaender et al.~\cite{rummikub_complexity} formalize a generalized version of Rummikub, where the number of values $n$, the number of suits $k$, and the number of tile copies $m$ are not fixed, but are instead part of the input. They show that even determining whether a move is valid—i.e., whether a given set of tiles can be partitioned into valid groups and runs—is computationally difficult. The NP-completeness result follows from a reduction from known NP-complete problems, such as the \textsc{3-Partition} problem, leveraging the fact that the constraints in Rummikub closely resemble those involved in such problems.
+
+Moreover, although the decision problem is NP-complete in the generalized setting, the paper also presents a pseudo-polynomial time algorithm when certain parameters are fixed. Specifically, if the number of suits $k$, the number of tile copies $m$, and the group size $s$ are fixed constants, then the problem becomes tractable and can be solved in polynomial time with respect to the number of values $n$. 
+
+This result is particularly relevant to the standard version of Rummikub as played in practice, where these parameters are indeed constants. Thus, while the general case is intractable, there is an important distinction: under fixed parameters (as in real-world games), finding valid moves is computationally feasible. This duality between theoretical complexity and practical playability motivates further algorithmic strategies that exploit these fixed constraints, such as dynamic programming or integer linear programming approaches.
 
 \section{Problem Definition and Set Enumeration}
 
@@ -176,7 +178,7 @@ In Rummikub, a \textbf{set} is a valid grouping of tiles that satisfies one of t
      so we do not need to consider them seperately} consecutive numbers in the same color.
 \end{itemize}
 
-The authors of the original model compute the total number of valid sets that can occur in the game---whether made purely from natural tiles or involving jokers. This total comes out to exactly \textbf{1174 sets}. Below, we explain how this number is derived.
+The authors of the original model compute the total number of valid sets that can occur in the game---whether made purely from natural tiles or involving jokers. This total comes out to exactly \textbf{1174 sets} \cite{den2006solving}. Below, we explain how this number is derived.
 
 \subsubsection*{1. Sets Without Jokers}
 
@@ -297,7 +299,7 @@ The model defines the following sets, parameters, and variables:
 \max \sum_{i \in I} v_i \cdot y_i
 \]
 
-\paragraph{Option 3: Maximize value and minimize changes (extended model)}
+\paragraph{Option 3: Maximize value and minimize changes (model used)}
 \[
 \max \left( \sum_{i \in I} v_i \cdot y_i + \frac{1}{M} \sum_{j \in J} z_j \right)
 \]
@@ -354,7 +356,7 @@ x_j, y_i, z_j &\in \{0, 1, 2\} &&\forall j \in J, i \in I
 
 \section{Implementation and Experiments}
 \subsection{Tools Used}
-Model implemented using Python and solved with Google OR-Tools
+Model implemented using Python and solved with Google OR-Tools\cite{or_tools}.
 
 \subsection{Test Cases}
 Present example game states and corresponding optimal plays derived from the model.
@@ -369,21 +371,43 @@ Present example game states and corresponding optimal plays derived from the mod
 Show performance in terms of solution time, and move quality.
 
 \section{Discussion}
+
 \subsection{Limitations}
-\begin{itemize}
-    \item Model scalability as board complexity increases
-    \item Handling dynamic player interaction
-\end{itemize}
+
+While the proposed Integer Linear Programming (ILP) model offers a powerful approach for determining optimal Rummikub moves from a static board configuration, several limitations emerged during development and testing.
+
+One major limitation lies in the scalability of the model as board complexity increases. Although the enumeration of all 1174 valid sets provides a comprehensive basis for optimization, the number of possible combinations that need to be evaluated grows significantly when the board contains many pre-existing sets and the player’s rack includes numerous interaction possibilities. This issue becomes more pronounced when considering manipulation of existing sets, which introduces additional layers of complexity and constraint handling. As a result, while our model performs well for moderately complex configurations, its computational efficiency may degrade in scenarios involving deeply interwoven board states or multiple jokers.
+
+Another notable challenge is the handling of dynamic player interaction across turns. The current model assumes a static board and evaluates optimal moves from the perspective of a single player on a single turn. However, Rummikub is inherently a multi-agent game where each player’s action influences the next, potentially invalidating or modifying previously optimal moves. Our framework does not yet accommodate strategic anticipation or planning across multiple turns, nor does it incorporate opponent modeling, bluffing strategies, or risk assessment, all of which are critical components of human-level gameplay.
+
+Moreover, while our code implementation using Google OR-Tools successfully solves the ILP formulation for various static scenarios, it lacks automation in test case generation and does not currently simulate full game progression. Each test must be manually crafted, which limits the breadth and depth of experimentation. The system also cannot yet play multiple turns in sequence or simulate a complete game involving multiple players with evolving board states.
 
 \subsection{Future Work}
-\begin{itemize}
-    \item Integration with other AI agents.
-    \item Use of reinforcement learning or hybrid approaches.
-    \item Implementation of Counting strategies to create a complex probabilistic model. 
-\end{itemize}
+
+There are several directions for future research and development that could enhance the capabilities and applicability of this model.
+
+First, integrating the ILP solver with other forms of artificial intelligence, such as heuristic search or game-tree evaluation agents, could significantly improve decision-making in more dynamic contexts. A hybrid architecture that combines rule-based pruning with optimization-based planning may be better suited to handle the fluid nature of Rummikub gameplay.
+
+Second, the application of reinforcement learning (RL) represents a promising avenue. An RL agent trained over thousands of simulated games could learn policies that not only evaluate immediate payoff but also account for long-term positioning and strategic manipulation. Reinforcement learning could also guide the agent in choosing between alternative optimal moves when multiple valid solutions exist, based on prior game outcomes or opponent behavior.
+
+Third, one intriguing area to explore is the implementation of \textbf{counting strategies}—techniques commonly used by expert players to track tile frequencies and infer opponents’ likely racks. By embedding probabilistic models into the optimization framework, it may be possible to refine decision-making based on partial information and simulate more intelligent behavior. 
+
+These models would need to balance the computational cost of probabilistic inference with the speed and precision required for real-time gameplay.
+
+Additionally, automating the generation of test scenarios and enabling the simulation of full multi-turn games with multiple players would provide a more robust platform for experimentation. Such a system would allow for comprehensive benchmarking, stress testing of the model under extreme configurations, and the ability to evaluate long-term strategy performance.
+
+Finally, enabling the system to track game progression, adapt to previous moves, and refine its strategy over time would be essential for constructing a competitive AI capable of playing Rummikub autonomously and at a high level.
 
 \section{Conclusion}
-We have proposed an integer programming model capable of identifying optimal Rummikub moves from a static game state. This framework serves as a step toward developing intelligent agents capable of playing competitively.
+
+In this work, we have presented a comprehensive mathematical framework for solving the Rummikub move optimization problem using Integer Linear Programming. By defining all 1174 valid tile sets and encoding game rules into a set of linear constraints, we developed a model capable of determining the optimal move for a given player in a static game state. Our ILP model was implemented using Google OR-Tools, and we demonstrated its ability to solve a variety of board configurations effectively, providing optimal solutions that respect all game constraints.
+
+The key strength of our approach lies in its precision and formal rigor. Unlike heuristic or greedy methods, our ILP formulation guarantees the identification of a globally optimal move under the defined objective function—either maximizing the number or total value of tiles placed. Furthermore, the modular nature of the model allows for extensions, such as alternative scoring schemes, secondary objectives (e.g., minimizing board changes), and the inclusion of joker-handling rules.
+Nevertheless, the research highlights several challenges that remain to be addressed. The current model operates under the assumption of a single-turn scenario and does not incorporate full game progression or interactions among multiple players. Additionally, the manual nature of test case generation limits the scalability and generalizability of our testing procedures.
+
+Looking ahead, this work lays the foundation for the development of a fully autonomous Rummikub-playing agent. With future enhancements—such as integration with reinforcement learning, dynamic simulation, and probabilistic reasoning—our model could evolve into a sophisticated decision-making engine capable of real-time gameplay. Such an agent could not only serve as a benchmark opponent for human players but also contribute to broader research on optimization and AI in combinatorial games.
+
+In summary, this investigation provides a strong first step toward the automation of intelligent gameplay in Rummikub through mathematical modeling. The fusion of combinatorial enumeration, integer programming, and AI techniques offers a promising pathway to mastering the intricate strategies of this deceptively complex game.
 
 \bibliographystyle{plainnat}
 \bibliography{rummikub_research}
