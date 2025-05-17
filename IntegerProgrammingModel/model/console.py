@@ -8,19 +8,19 @@ def main():
 
     # Tiles on the table
     table_tiles = [
-        tile_id('red', 4), tile_id('blue', 4), tile_id('black', 4),
-        tile_id('orange', 10), tile_id('orange', 11), tile_id('orange', 12),
-        tile_id('black', 7), tile_id('black', 8), tile_id('black', 9)
+        tile_id('red', 3), tile_id('blue', 3), tile_id('orange', 3),
+        tile_id('black', 7), tile_id('black', 8), tile_id('black', 9),
+        tile_id('blue', 10), tile_id('blue', 11), tile_id('blue', 9)
     ]
     ti = build_ti(table_tiles)
 
     # Tiles on player's rack
     rack_tiles = [
-        tile_id('red', 1), tile_id('red', 5), tile_id('red', 13),
-        tile_id('blue', 5), tile_id('blue', 1), tile_id('blue', 7),
-        tile_id('orange', 1), tile_id('orange', 3), tile_id('orange', 5),
-        tile_id('black', 1), tile_id('black', 2), tile_id('black', 3),
-        tile_id('red', 7), tile_id('blue', 12), 
+        tile_id('red', 1), tile_id('red', 5), tile_id('red', 7), 
+        tile_id('blue', 1), tile_id('blue', 2), tile_id('blue', 6),
+        tile_id('orange', 5), tile_id('orange', 6), tile_id('orange', 7),
+        tile_id('black', 1), tile_id('black', 2), tile_id('black', 5),
+        tile_id('red', 12), tile_id('orange', 12), 
         JOKER_ID
     ]
     ri = build_ri(rack_tiles)
