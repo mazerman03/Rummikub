@@ -1,4 +1,5 @@
 \documentclass[11pt,letterpaper]{article}
+\usepackage{float}
 \usepackage{fcfm}
 \usepackage{url}
 
@@ -371,11 +372,31 @@ The ILP model was implemented in Python using the Google OR-Tools optimization l
 \subsection*{Test Cases}
 Present example game states and corresponding optimal plays derived from the model.
 
+\newpage
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{Figures/Initial_Board.png}
-    \caption{Example initial board configuration solved by the model.}
+    \includegraphics[width=.8\textwidth]{Figures/Initial_Board.png}
+    \includegraphics[width=.8\textwidth]{Figures/Final_Board.png}
+    \caption{First simulation}
+\end{figure}
+
+\newpage
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\textwidth]{Figures/Initial_Board_2.png}
+    \includegraphics[width=.8\textwidth]{Figures/Final_Board_2.png}
+    \caption{Second simulation}
+\end{figure}
+
+\newpage
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\textwidth]{Figures/Initial_Board_3.png}
+    \includegraphics[width=.8\textwidth]{Figures/Final_Board_3.png}
+    \caption{Third simulation}
 \end{figure}
 
 \subsection*{Results}
