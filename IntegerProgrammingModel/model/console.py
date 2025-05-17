@@ -8,27 +8,37 @@ def main():
 
     # Tiles on the table
     table_tiles = [
-        tile_id('red', 3), tile_id('blue', 3), tile_id('orange', 3),
-        tile_id('black', 7), tile_id('black', 8), tile_id('black', 9),
-        tile_id('blue', 10), tile_id('blue', 11), tile_id('blue', 9)
+        # Run of orange: 5, 6, 7
+        tile_id('orange', 5), tile_id('orange', 6), tile_id('orange', 7),
+        # Run of Red: 5, 6, 7
+        tile_id('red', 5), tile_id('red', 6), tile_id('red', 7),
+        # Run of Black: 5, 6, 7, 8, 9
+        tile_id('black', 5), tile_id('black', 6), tile_id('black', 7), tile_id('black', 8), tile_id('black', 9)
     ]
     ti = build_ti(table_tiles)
 
     # Tiles on player's rack
     rack_tiles = [
-        tile_id('red', 1), tile_id('red', 5), tile_id('red', 7), 
-        tile_id('blue', 1), tile_id('blue', 2), tile_id('blue', 6),
-        tile_id('orange', 5), tile_id('orange', 6), tile_id('orange', 7),
-        tile_id('black', 1), tile_id('black', 2), tile_id('black', 5),
-        tile_id('red', 12), tile_id('orange', 12), 
-        JOKER_ID
+        tile_id('red', 4),
+        tile_id('black', 4),
+        tile_id('black', 10),
+        tile_id('blue', 5),
+        tile_id('orange', 2),
+        tile_id('red', 3),
+        tile_id('red', 6),
+        tile_id('orange', 12),
+        tile_id('orange', 8),
+        tile_id('blue', 6),
+        tile_id('black', 9)
     ]
     ri = build_ri(rack_tiles)
 
     # Existing sets on table (auto-match based on tiles)
     table_sets = [
-        s['id'] for s in sets if set([tile_id('red', 3), tile_id('blue', 3), tile_id('black', 3)]).issubset(s['tiles']) or
-        set([tile_id('orange', 7), tile_id('orange', 8), tile_id('orange', 9)]).issubset(s['tiles'])
+        s['id'] for s in sets if 
+            set([tile_id('orange', 5), tile_id('orange', 6), tile_id('orange', 7)]).issubset(s['tiles']) or
+            set([tile_id('red', 5), tile_id('red', 6), tile_id('red', 7)]).issubset(s['tiles']) or
+            set([tile_id('black', 5), tile_id('black', 6), tile_id('black', 7), tile_id('black', 8), tile_id('black', 9)]).issubset(s['tiles'])
     ]
     wj = build_wj(sets, table_sets)
 
