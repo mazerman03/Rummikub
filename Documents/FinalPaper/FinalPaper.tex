@@ -1,6 +1,7 @@
 \documentclass[11pt,letterpaper]{article}
 \usepackage{float}
 \usepackage{fcfm}
+\usepackage{url}
 
 \begin{document}
 
@@ -366,7 +367,7 @@ x_j, y_i, z_j &\in \{0, 1, 2\} &&\forall j \in J, i \in I
 
 \section*{Implementation and Experiments}
 \subsection*{Tools Used}
-Model implemented using Python and solved with Google OR-Tools\cite{or_tools}.
+The ILP model was implemented in Python using the Google OR-Tools optimization library. The model formulation was translated directly into a solver-compatible format, and solutions were computed efficiently on typical hardware. The full implementation, along with all test scenarios, is available in the public GitHub repository: \url{https://github.com/mazerman03/Rummikub}.
 
 \subsection*{Test Cases}
 Present example game states and corresponding optimal plays derived from the model.
